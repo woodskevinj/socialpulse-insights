@@ -1,0 +1,22 @@
+# Core
+pandas
+numpy
+scikit-learn
+
+# NLP / Sentiment
+vaderSentiment
+transformers
+torch
+spacy
+
+# API (planned)
+fastapi
+uvicorn[standard]
+
+# Utilities
+python-dotenv
+
+# Dev / Testing
+pytest
+black
+isort
