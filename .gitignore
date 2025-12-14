@@ -1,0 +1,105 @@
+# ------------------------------
+# Python
+# ------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.dll
+
+# Virtual environments
+venv/
+.env/
+.env.bak/
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyd
+*.pyo
+*.pyd
+
+# PyTest cache
+.pytest_cache/
+
+# mypy / type checker caches
+.mypy_cache/
+.dmypy.json
+
+# ------------------------------
+# Data Science Artifacts
+# ------------------------------
+# Raw datasets (keep these local, not in GitHub)
+data/raw/*
+!data/raw/.gitkeep
+
+# Processed datasets
+data/processed/*
+!data/processed/.gitkeep
+
+# Model artifacts
+*.pkl
+*.joblib
+*.pt
+*.bin
+*.h5
+
+# Temporary output files
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.xlsx
+
+# ------------------------------
+# FastAPI / Uvicorn / Logs
+# ------------------------------
+logs/
+*.log
+
+# ------------------------------
+# Environment / Secrets
+# ------------------------------
+# Never commit API keys or credentials
+*.env
+.env.*
+*.ini
+*.cfg
+*.toml
+
+# ------------------------------
+# OS / Editor Junk
+# ------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/
+.code-workspace
+
+# PyCharm / JetBrains
+.idea/
+
+# ------------------------------
+# Build / Packaging
+# ------------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ------------------------------
+# Docker (if later added)
+# ------------------------------
+docker-compose.override.yml
