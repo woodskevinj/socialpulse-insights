@@ -1,3 +1,7 @@
+# This is a basic loader for Sentiment140 dataset.
+# It reads the CSV file and normalizes the columns for easier use.
+
+
 from typing import Optional
 import pandas as pd
 from .config import SENTIMENT140_PATH

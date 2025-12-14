@@ -1,3 +1,5 @@
+# this is a simple text cleaning module for social media text.
+
 import re
 from typing import Iterable
 import pandas as pd
