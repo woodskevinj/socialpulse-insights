@@ -41,7 +41,7 @@ def top_examples(
     n: int = 5,
 ) -> pd.DataFrame:
     """
-    REturn top example posts for a given label.
+    Return top example posts for a given label.
     """
 
     subset = df[df["label"] == sentiment_label]
