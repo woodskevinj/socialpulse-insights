@@ -140,6 +140,10 @@ data/raw/sentiment140.csv
 Open the first notebook:
 
 ```bash
+jupyter lab
+```
+
+```bash
 notebooks/01_eda_and_entity_tagging.ipynb
 ```
 

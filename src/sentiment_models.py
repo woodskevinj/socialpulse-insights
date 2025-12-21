@@ -23,34 +23,34 @@ class VaderSentimentModel:
     def __init__(self):
         self.analyzer = SentimentIntensityAnalyzer()
 
-        def predict(self, texts: Union[str, List[str]]) -> List[Dict]:
-            """
-            Predict sentiment for a single text or list of texts.
-            Output format:
+    def predict(self, texts: Union[str, List[str]]) -> List[Dict]:
+        """
+        Predict sentiment for a single text or list of texts.
+        Output format:
             
-            [
-                {"label": "positive", "score": 0.92},
-                ...
-            ]
-            """
-            if isinstance(texts, str):
-                texts = [texts]
+        [
+            {"label": "positive", "score": 0.92},
+            ...
+        ]
+        """
+        if isinstance(texts, str):
+            texts = [texts]
 
-            results = []
-            for t in texts:
-                scores = self.analyzer.polarity_scores(t)
-                compound = scores["compound"]
+        results = []
+        for t in texts:
+            scores = self.analyzer.polarity_scores(t)
+            compound = scores["compound"]
 
-                if compound >= 0.05:
-                    label = "positive"
-                elif compound <= -0.05:
-                    label = "negative"
-                else:
-                    label = "neutral"
+            if compound >= 0.05:
+                label = "positive"
+            elif compound <= -0.05:
+                label = "negative"
+            else:
+                label = "neutral"
 
-                results.append({"label": label, "score": compound})
+            results.append({"label": label, "score": compound})
 
-            return results
+        return results
 
 
 class TransformersSentimentModel:
