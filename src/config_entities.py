@@ -30,7 +30,6 @@ TRACKED_ENTITIES = [
             "electric vehicle",
             "electric car",
             "evs",
-            "ev",
             "electric vehicles",
         ],
     },

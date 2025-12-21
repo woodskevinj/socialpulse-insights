@@ -41,3 +41,14 @@ def test_find_entities_in_text_matches_aliases():
         assert tagged.loc[2, "entities"] == []
         assert tagged.loc[1, "primary_entity_name"] is None
         assert tagged.loc[1, "primary_entity_type"] is None
+
+
+def test_short_alias_does_not_match_inside_words():
+    entities = [
+        {"name": "electrice vehicles", "type": "topic", "aliases": ["ev"]}
+    ]
+
+    # 'ev' should NOT match inside 'believe'
+    text = "i believe this will work"
+    matches = find_entities_in_text(text, entities)
+    assert matches == []

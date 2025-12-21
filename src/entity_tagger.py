@@ -1,8 +1,24 @@
 # this will scan text_clean for aliases and tag each row with an entity.
 
+import re
 from typing import List, Dict, Any, Optional
 import pandas as pd
 from .config import ENTITIES
+
+
+def _alias_pattern(alias: str) -> re.Pattern:
+    """
+    Build a safe regex pattern for alias matching.
+
+    Uses word boundaries to avoid substring false positives.
+    Example:  'ev' should not match 'believe'.
+    """
+    alias = alias.strip().lower()
+    escaped = re.escape(alias)
+
+    # Word boundary match for most aliases
+    # This is important for short aliases like 'ev', 'btc'
+    return re.compile(rf"\b{escaped}\b")
 
 def find_entities_in_text(text: str, entities: List[Dict[str, Any]]) -> List[Dict[str, str]]:
     """
@@ -22,7 +38,8 @@ def find_entities_in_text(text: str, entities: List[Dict[str, Any]]) -> List[Dic
     for entity in entities:
         aliases = entity.get("aliases", [])
         for alias in aliases:
-            if alias in text_lower:
+            pattern = _alias_pattern(alias)
+            if pattern.search(text_lower):
                 matches.append({"name": entity["name"], "type": entity["type"]})
                 break # avoid duplicate matches for the same entity
 
@@ -30,9 +47,9 @@ def find_entities_in_text(text: str, entities: List[Dict[str, Any]]) -> List[Dic
 
 
 def tag_entities(
-        df: pd.DataFrame,
-        text_col: str = "text_clean",
-        entities: Optional[List[Dict[str, Any]]] = None,
+    df: pd.DataFrame,
+    text_col: str = "text_clean",
+    entities: Optional[List[Dict[str, Any]]] = None,
 ) -> pd.DataFrame:
     """
     Tag each row with matched entities based on aliases.
