@@ -1,9 +1,27 @@
 # this will scan text_clean for aliases and tag each row with an entity.
 
 import re
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 import pandas as pd
+
 from .config import ENTITIES
+
+
+def compile_entity_patterns(entities: List[Dict[str, Any]]) -> List[Tuple[Dict[str, str], List[re.Pattern]]]:
+    """
+    Precompile regex patterns for each entity's aliases so we don't recompile per row.
+    Returns a list of (entity_meta, patterns).
+    """
+    compiled = []
+    for e in entities:
+        patterns = []
+        for alias in e.get("aliases", []):
+            alias = alias.strip().lower()
+            if not alias:
+                continue
+            patterns.append(re.compile(rf"\b{re.escape(alias)}\b"))
+        compiled.append(({"name": e["name"], "type": e["type"]}, patterns))
+    return compiled
 
 
 def _alias_pattern(alias: str) -> re.Pattern:
@@ -20,28 +38,28 @@ def _alias_pattern(alias: str) -> re.Pattern:
     # This is important for short aliases like 'ev', 'btc'
     return re.compile(rf"\b{escaped}\b")
 
-def find_entities_in_text(text: str, entities: List[Dict[str, Any]]) -> List[Dict[str, str]]:
-    """
-    Return a list of matched entities for a given text.
-
-    Each match is a dict wit:
-    - name
-    - type
-    """
+def find_entities_in_text_compiled(text: str, compiled_entities) -> List[Dict[str, str]]:
 
     if not isinstance(text, str) or not text:
         return []
     
-    text_lower = text.lower()
     matches = []
+    text_lower = text.lower()
+    
 
-    for entity in entities:
-        aliases = entity.get("aliases", [])
-        for alias in aliases:
-            pattern = _alias_pattern(alias)
-            if pattern.search(text_lower):
-                matches.append({"name": entity["name"], "type": entity["type"]})
-                break # avoid duplicate matches for the same entity
+    # for entity in entities:
+    #     aliases = entity.get("aliases", [])
+    #     for alias in aliases:
+    #         pattern = _alias_pattern(alias)
+    #         if pattern.search(text_lower):
+    #             matches.append({"name": entity["name"], "type": entity["type"]})
+    #             break # avoid duplicate matches for the same entity
+
+    for meta, patterns in compiled_entities:
+        for pat in patterns:
+            if pat.search(text_lower):
+                matches.append(meta)
+                break
 
     return matches
 
@@ -62,10 +80,12 @@ def tag_entities(
 
     df = df.copy()
     entities = entities or ENTITIES
+
+    compiled = compile_entity_patterns(entities)
     
-    matches = df[text_col].apply(lambda t: find_entities_in_text(t, entities))
-    df["entities"] = matches
-    
+    # matches = df[text_col].apply(lambda t: find_entities_in_text(t, entities))
+    df["entities"] = df[text_col].apply(lambda t: find_entities_in_text_compiled(t, compiled))
+
     # Choose first matched entity as "primary" (simple heuristic)
     df["primary_entity_name"] = df["entities"].apply(
         lambda ms: ms[0]["name"] if ms else None
